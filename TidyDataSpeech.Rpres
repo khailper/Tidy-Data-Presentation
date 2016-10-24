@@ -1,0 +1,153 @@
+Principles of Tidy Data
+========================================================
+author: Karl Hailperin
+date: 
+autosize: true
+
+What is Tidy Data?
+========================================================
+
+- Way to structure day for easier analysis
+- Developed by His Royal Tidiness, Hadley Wickham
+- Outlined in 2014 paper in Journal of Statistical Software
+  - More informal version available as vignette for tidyr package (CRAN)
+  
+Tidy Data 
+========================================================
+
+1. Each variable forms a column.
+2. Each observation forms a row.
+3. Each type of observational unit forms a table.
+
+1 Variable/Column
+========================================================
+
+- Example from my work: Membership Type = "75_SENIOR" or "86_FAMILY_STAFF"
+- Really two variables: Location Code, Membership Type, Staff
+- Should be three columns
+
+1 Observation/Row
+========================================================
+incremental: true
+
+![Punnett Square](Punnett_Square.png)
+
+(picture from Wikipedia)
+***
+```{r, echo=FALSE}
+dad <- c("B", "b", "B", "b")
+mom <- c("B", "B", "b", "b")
+child <- c("BB", "Bb", "Bb", "bb")
+square <- data.frame(dad, mom, child)
+print(square)
+```
+
+1 Unit/Table
+========================================================
+
+- Example: Clinic visits on one table, patient info on another
+- If doing analysis using data from both, use join
+
+Yeah, but So What?
+========================================================
+
+Benefits of tidy data:
+- Easier to write functions that are interact properly 
+- Easier to write code that works
+- Easier to read code 
+
+Readability
+========================================================
+incremental: true
+
+- Hadley can write functions like this:
+
+function(data.frame, variable_1, variable_2, ...)
+
+- But really it works like this:
+
+function(data.frame$variable_1, data.frame$variable_2, ...)
+
+- Because he doesn't have to account for this:
+
+function(data.frame[index of variable_1, ], data.frame$variable_2, ...)
+
+- Which of these three parses best?
+
+Some Tools for Tidying data
+========================================================
+
+CRAN:
+
+- tidyr, stringr (general)
+- jsonlite/tidyjson (JSON)
+- broom (models)
+
+In Development (for Excel):
+- jailbreakr (https://github.com/rsheets/jailbreakr)
+- tidyxl (https://github.com/nacnudus/tidyxl)
+- unpivotr (https://github.com/nacnudus/unpivotr)
+
+Gather Example
+========================================================
+incremental: true
+
+```{r, echo=FALSE}
+group_1 <- c("city_1", "city_2", "city_3")
+group_2 <- c("city_4", "city_5", "city_6")
+group_3 <- c("city_7", "city_8", "city_9")
+cities <- data.frame(group_1, group_2, group_3)
+print(cities)
+```
+***
+```{r}
+library(tidyr)
+tidy_cities <- gather(data = cities, key = category, value = city, group_1:group_3)
+print(tidy_cities)
+```
+
+Spread Example
+========================================================
+incremental: true
+```{r, echo=FALSE}
+print(square)
+```
+***
+```{r}
+punnett_square <- spread(data = square, key = dad, value = child)
+print(punnett_square)
+```
+
+```{r, echo=FALSE}
+dad2 <- c("d_B", "d_b", "d_B", "d_b")
+mom2 <- c("m_B", "m_B", "m_b", "m_b")
+child2 <- c("BB", "Bb", "Bb", "bb")
+square2 <- data.frame(dad2, mom2, child2)
+punnett_square2 <- spread(data = square2, key = dad2, value = child2)
+print(punnett_square2)
+```
+
+Separate Example
+========================================================
+incremental: true
+```{r, echo=FALSE}
+Name <- c("Rebecca Bunch", "Josh Chan", "Greg Serrano", "Paula Proctor")
+name_list <- as.data.frame(cbind(Name))
+print(name_list)
+```
+***
+```{r}
+name_df <- separate(data = name_list, col = Name, into = c("First_Name", "Last_Name"), sep = " ")
+print(name_df)
+```
+
+Unite Example
+========================================================
+
+```{r}
+name_list <- unite(data = name_df, col = Name, First_Name, Last_Name, sep = " ")
+print(name_list)
+```
+
+Questions?
+========================================================
