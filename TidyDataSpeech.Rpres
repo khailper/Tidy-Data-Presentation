@@ -23,7 +23,7 @@ Tidy Data
 ========================================================
 
 - Example from my work: Membership Type = "75_SENIOR" or "86_FAMILY_STAFF"
-- Really two variables: Location Code, Membership Type, Staff
+- Really three variables: Location Code, Membership Type, Staff
 - Should be three columns
 
 1 Observation/Row
